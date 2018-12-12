@@ -1,6 +1,8 @@
 import sys
 
+
 class RedirectStdStreams(object):
+
 
     def __init__(self, stdout=None, stderr=None):
         self._stdout = stdout or sys.stdout

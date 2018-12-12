@@ -7,9 +7,27 @@ Welcome to django-mail-system's documentation!
 ==============================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: General:
 
+   docs/settings.rst
+   docs/generator.rst
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Tutorial:
+
+   docs/mailfactory.rst
+   docs/maillog.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Class Documentation:
+
+   docs/utils/factory.rst
+   docs/utils/mail.rst
+   docs/models.rst
 
 
 Indices and tables
@@ -18,9 +36,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-Test
-====
-
-hi

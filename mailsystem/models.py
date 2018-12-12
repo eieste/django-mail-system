@@ -1,17 +1,31 @@
-from django.db import models
 import re
+
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.utils.timezone import datetime
+from django.utils.translation import gettext as _
 
 
 class MailLogSession(models.Model):
-    uuid = models.UUIDField(editable=False)
-    recipient_email = models.EmailField(max_length=255)
-    sender_email = models.EmailField(max_length=255)
-    context = models.TextField()
-    email = models.TextField()
-    send_at = models.DateTimeField(auto_now=True)
+    """
+        Log the E-Mail transmission
+    """
+    uuid = models.UUIDField(editable=False, help_text=_("E-Mail header Identificator"))
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, blank=True, null=True)
+    reference = models.CharField(max_length=255, null=True, blank=True)
+    recipient_email = models.EmailField(max_length=255, help_text=_("E-Mail Empfänger"))
+    sender_email = models.EmailField(max_length=255, help_text=_("E-Mail Sender"))
+    context = models.TextField(help_text=_("Context, used for E-Mail rendering"))
+    email = models.TextField(help_text=_("Full E-Mail"))
+    send_at = models.DateTimeField(auto_now=True, help_text=_("Send Timestamp"))
 
     def logparse(self, log):
+        """
+        Parse an E-Mail sendlog
+        :param log: Log string
+        :return:
+        """
         line_regex = re.compile(r'(?P<timestamp>[\d+\:]{5,10}\.\d+)\s(?P<linetype>\w+)\:\s(?P<payload>.*)', re.MULTILINE)
         entry_list = []
 
@@ -31,8 +45,19 @@ class MailLogSession(models.Model):
 
             MailLogLine.objects.bulk_create(entry_list)
 
+    def get_reference(self):
+        """
+        Resolve saved Reference
+        :return Model: Any previously saved Database Object
+        """
+        model = self.content_type.model_class()
+        return model.objects.get(pk=self.reference)
+
 
 class MailLogLine(models.Model):
+    """
+        Single line of transmission log. Linked with MailSogSession.
+    """
     protocol = models.ForeignKey(MailLogSession, on_delete=models.CASCADE)
     timestamp = models.TimeField()
     type = models.CharField(max_length=255)
@@ -40,10 +65,13 @@ class MailLogLine(models.Model):
     insert = models.DateTimeField(auto_now_add=True)
 
 
+TEMPLATE_PATH = getattr(settings, "MAILSYSTEM_MAIL_TEMPLATE_PATH", "mailsystem/templates/mailsystem/")
+
+
 class MailTemplate(models.Model):
     name = models.CharField(max_length=255)
-    html_file = models.FilePathField(recursive=True, max_length=500)
-    alternative_file = models.FilePathField(recursive=True, max_length=500)
+    html_file = models.FilePathField(path=TEMPLATE_PATH, recursive=True, max_length=500)
+    alternative_file = models.FilePathField(path=TEMPLATE_PATH, recursive=True, max_length=500)
 
     def __str__(self):
         return self.name
@@ -62,15 +90,16 @@ class Mail(models.Model):
     subject = models.CharField(max_length=255, help_text=_("E-Mail Betreff"))
     template = models.ForeignKey(MailTemplate, on_delete=models.DO_NOTHING)
     generator = models.CharField(max_length=255, default="notification.generator.generic.BasicGenerator")
+    reason = models.SlugField(max_length=100, unique=True)
 
     def __str__(self):
-        return { self.subject }
+        return self.subject
 
 
 class MailVariable(models.Model):
     mail = models.ForeignKey(Mail, on_delete=models.DO_NOTHING)
-    mail_template = models.ForeignKey(MailTemplate, on_delete=models.DO_NOTHING)
+    mail_template_variable = models.ForeignKey(MailTemplateVariable, on_delete=models.DO_NOTHING)
     content = models.TextField()
 
     def __str__(self):
-        return f"{self.mail_template.name} - {self.mail}"
+        return "{} - {}".format(self.mail_template_variable.name, self.mail)
