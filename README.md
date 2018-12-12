@@ -3,7 +3,8 @@
  
 # django-mail-system
 
-Creates a full log of Outgoing E-Mails
+A usfull libary for create E-Mail Templates, and log email transmissions
+
 
 ## Install
 
@@ -19,3 +20,7 @@ INSTALLED_APPS = [
     maillog,
 ]
 ```
+
+## Documentation
+
+[Read the Docs](https://django-mail-system.readthedocs.io/)

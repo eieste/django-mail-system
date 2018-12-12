@@ -9,11 +9,11 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-mail-system',
-    version='0.0.1',
+    version='0.0.2',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
-    description='A Django app to create Detailed Logs for outgoing E-Mails.',
+    description='A usfull libary for create E-Mail Templates, and log email transmissions',
     long_description=README,
     long_description_content_type="text/markdown",
     url='https://github.com/eieste/django-mail-system',
@@ -32,4 +32,9 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
+    project_urls={
+        "Documentation": "https://django-mail-system.readthedocs.io/",
+        "Source Code": "https://github.com/eieste/django-mail-system/",
+    }
+
 )
