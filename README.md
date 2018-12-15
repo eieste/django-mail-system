@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/eieste/django-mail-system.svg?branch=master)](https://travis-ci.org/eieste/django-mail-system)
-[![Documentation Status](https://readthedocs.org/projects/django-mail-system/badge/?version=latest)](https://django-mail-system.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://travis-ci.org/eieste/django-mail-system.svg?branch=staging)](https://travis-ci.org/eieste/django-mail-system)
+[![Documentation Status](https://readthedocs.org/projects/django-mail-system/badge/?version=staging)](https://django-mail-system.readthedocs.io/en/staging/?badge=staging)
+
  
 # django-mail-system
 
@@ -16,12 +17,12 @@ You have a WebService and you would like to send bill mails to all users every f
 
 
 ```
-    from mailsystem.utils.factory import MailFactory
-    import datetime
-    
-    if datetime.now().day == 1:
-        for user in User.objects.filter(active=True):
-            MailFactory.trigger(reason="billmail", reference=user)
+from mailsystem.utils.factory import MailFactory
+import datetime
+
+if datetime.now().day == 1:
+    for user in User.objects.filter(active=True):
+        MailFactory.trigger(reason="billmail", reference=user)
     
 ```
 
