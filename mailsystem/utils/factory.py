@@ -6,12 +6,30 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template import Template, Context
 from django.template.loader import get_template
-
+from django.db.models import QuerySet
 from mailsystem.models import Mail
 from mailsystem.utils.mail import MailLogger
 
+
+class MailMeta:
+
+    def __init__(self, to, from_email, reply_to):
+        """
+        MailMeta contains all information to
+        :param to:
+        :param from_email:
+        :param reply_to:
+        """
+
+        if isinstance(to, str):
+            self.to = [to]
+        else:
+            self.to = to
+        self.from_email = from_email
+        self.reply_to = reply_to
+
 MailMeta = namedtuple("MailMeta", ("to", "from_email", "reply_to"))
-MailMeta.__new__.__defaults__ = ("asdf@ultraapp.de", settings.EMAIL_HOST_USER, "asdf@ultraapp.de")
+#MailMeta.__new__.__defaults__ = ("asdf@ultraapp.de", settings.EMAIL_HOST_USER, "asdf@ultraapp.de")
 
 
 class MailFactory:
@@ -36,7 +54,7 @@ class MailFactory:
         #Extract kwargs
         reference = kwargs.pop("reference")
         mail = kwargs.pop("mail")
-        reason = kwargs.pop("reason")
+        reason = kwargs.pop("reasosn")
         meta = kwargs.pop("meta")
 
         # Check given Arguments
@@ -44,6 +62,16 @@ class MailFactory:
             raise ValueError("reason/mail are mutally exclusive")
         elif mail is None and reason == "":
             raise ValueError("reason/mail are mutally exclusive")
+
+        if meta is None and reference is not None:
+            meta = MailMeta(from_email=settings.MAILSYSTEM_SENDER_EMAIL, reply_to=settings.get("MAILSYSTEM_REPLY_TO", None))
+            if not hasattr(reference, "email"):
+                raise AttributeError("Reference has no email attribute. Please use mailmeta")
+            else:
+                if type(reference.email) is str:
+                    meta.to = [reference.email]
+                else:
+                    raise ValueError("reference.email is not a string")
 
         # Convert reason_string to "MailTemplate"
         if not reason == "":

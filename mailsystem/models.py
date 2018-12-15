@@ -22,7 +22,8 @@ class MailLogSession(models.Model):
 
     def logparse(self, log):
         """
-        Parse an E-Mail sendlog
+        Parse a E-Mail sendlog
+
         :param log: Log string
         :return:
         """
@@ -48,6 +49,7 @@ class MailLogSession(models.Model):
     def get_reference(self):
         """
         Resolve saved Reference
+
         :return Model: Any previously saved Database Object
         """
         model = self.content_type.model_class()
@@ -56,7 +58,7 @@ class MailLogSession(models.Model):
 
 class MailLogLine(models.Model):
     """
-        Single line of transmission log. Linked with MailSogSession.
+        Single line of transmission log. Linked with MailLogSession.
     """
     protocol = models.ForeignKey(MailLogSession, on_delete=models.CASCADE)
     timestamp = models.TimeField()

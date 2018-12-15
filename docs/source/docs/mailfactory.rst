@@ -2,17 +2,17 @@
 Mail Factory
 ############
 
-MailFactory gives you a way to Render multiple E-Mails with the same Template.
-You can define Mail-Templates with Variables
+MailFactory gives you a way to render multiple E-Mails with the same template.
+You can define mail-templates with different variables
 
-This Templates can be used to create Mails. This Mails contains the subject.
-A mail had also a Reason(string). Reason describes the event that triggers the E-Mail Send Action
+These templates can be used to create mails. These mails, which are created in this way can contain different subjects.
+A mail is also described by a reason(string). If it is necessary to trigger a mail, the reason finds the event that triggers the e-mail sending action
 
 
 MailTemplate & MailTemplateVariables
 ------------------------------------
 
-Create an html E-Mail Template. Define Variables in this E-Mail Template
+Creates a html E-Mail template. Defines the  variables in this E-Mail template
 
 .. code-block:: HTML
 
@@ -41,7 +41,7 @@ Create an html E-Mail Template. Define Variables in this E-Mail Template
     </html>
 
 Register this Template in Database. You can use the ``Home › Mailsystem › Mail templates`` Adminpage
-You can create an MailTemplate with the following settings:
+You can create a MailTemplate with the following settings:
 
 **Add mail template**
 - **Name:** Default Template
@@ -60,12 +60,12 @@ This two files should be have the Same Variables
    | **default:** Sincerely
 
 
-When this entrys are created you can use this Template for any E-Mail.
+When this entrys are created you can use this template for any E-Mail.
 
 Mail
 ----
 
-Now it's possible to Create Mails. A "Mail" is the template for a specific Reason to send an E-Mail
+Now it is possible to create mails. A "Mail" is the template for a specific reason to send a E-Mail
 like:
 
 - Registration E-Mail
@@ -73,13 +73,13 @@ like:
 - Welcome E-Mail
 - ...
 
-Create an Mail-Entry at the ``Home › Mailsystem › Mails › Add mail`` Admin Page
-The Subject field is the E-Mail Subject.
+Create a Mail-Entry at the ``Home › Mailsystem › Mails › Add mail`` Admin Page
+The subject field is the E-Mail subject.
 Select the template created above.
-you can create your own generator, or use the Default generator
+you can create your own generator, or use the default generator
 
 Reason is a slug field. This slug can be used as Identifire in the sourcecode.
-The Reason is also importent for the MailFactory class.
+The reason is also important for the MailFactory class.
 
 
 Trigger
@@ -91,9 +91,12 @@ Now you are ready to send E-Mails
 
    from mailsystem.utils.factory import MailFactory, MailMeta
 
-   a = MailMeta(["user@example.de"])
+   # Create a MailMeta
+   mailmeta = MailMeta(["user@example.de"])
 
-   MailFactory.trigger(reason="blubbern", meta=a, reference={"name":"foo"})
-   MailFactory.trigger(reason="blubbern", meta=a, reference={"name":"foo"})
+    user = User.objects.get(pk=1)
+
+   # Trigger the E-Mail transmission
+   MailFactory.trigger(reason="send_bill", meta=mailmeta, reference=user)
 
 

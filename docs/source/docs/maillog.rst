@@ -2,7 +2,7 @@
 MailLog
 #######
 
-Log the Transsmission of an outgoing E-Mail:
+How to log the transmission of an outgoing E-Mail:
 
 
 .. code-block:: python3

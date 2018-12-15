@@ -13,10 +13,18 @@ from mailsystem.utils.streams import RedirectStdStreams
 class MailMessage:
 
     def __init__(self, email_message=None, maillog_session=None):
+        """Alternative EmailMessage OBject
+        :param email_message: Orginal EmailMessage or EmailAlternativeMessage
+        :param maillog_session: MailLogSession object
+        """
         self._email_message = email_message
         self._maillog_session = maillog_session
 
     def send(self):
+        """
+            Trigger send method of the orginal EmailMessage Object
+            :return:
+        """
         data = io.StringIO()
         with RedirectStdStreams(stdout=data, stderr=data):
             self._email_message.send()
@@ -42,22 +50,27 @@ class MailLogger:
         self._email_message = email_message
 
     def __enter__(self):
+        # Change smtplib debuglevel
         smtplib.SMTP.debuglevel = 9
 
+        # Create an UUID for E-Mail Header
         self._email_message.extra_headers["mailsystem-reference-uuid"] = uuid.uuid4()
+        # Create MailLogSession enry
         maillog_session = MailLogSession.objects.create(recipient_email=self._email_message.to[0],
                                                         sender_email=self._email_message.from_email,
                                                         email=self._email_message.body,
                                                         uuid=self._email_message.extra_headers["mailsystem-reference-uuid"]
                                                        )
+        # Resolve reference o content_type if exists
         if self._reference:
             contenttype = ContentType.objects.get_for_model(model=type(self._reference))
             maillog_session.content_type = contenttype
             maillog_session.reference = self._reference.pk
             maillog_session.save()
 
-
+        # Return a Represententing Object
         return MailMessage(email_message=self._email_message, maillog_session=maillog_session)
 
     def __exit__(self, type, value, traceback):
+        # Reset smtplib debuglevel to orginal Level
         smtplib.SMTP.debuglevel = self.orginal_debuglevel

@@ -3,7 +3,27 @@
  
 # django-mail-system
 
-A usfull libary for create E-Mail Templates, and log email transmissions
+A usefull library to create E-Mail templates und log E-Mail transmissions
+
+
+You can define Templates and Variables for this Templates
+This Templates can be used to send E-Mails.
+The whole Process is very simple. 
+
+Example:
+
+You have a WebService and you would like to send bill mails to all users every first day of month, you can simply just do it with the following code:
+
+
+```
+    from mailsystem.utils.factory import MailFactory
+    import datetime
+    
+    if datetime.now().day == 1:
+        for user in User.objects.filter(active=True):
+            MailFactory.trigger(reason="billmail", reference=user)
+    
+```
 
 
 ## Install

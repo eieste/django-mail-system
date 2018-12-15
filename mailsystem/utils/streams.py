@@ -3,8 +3,12 @@ import sys
 
 class RedirectStdStreams(object):
 
-
     def __init__(self, stdout=None, stderr=None):
+        """
+            Can be Redirect stdout or stderr to stdout
+            :param stdout: io Stream
+            :param stderr: io Stream
+        """
         self._stdout = stdout or sys.stdout
         self._stderr = stderr or sys.stderr
 

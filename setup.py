@@ -9,22 +9,24 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-mail-system',
-    version='0.0.2',
+    version='0.0.4',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
-    description='A usfull libary for create E-Mail Templates, and log email transmissions',
+    description='A usefull library to create E-Mail templates und log E-Mail transmissions',
     long_description=README,
     long_description_content_type="text/markdown",
     url='https://github.com/eieste/django-mail-system',
     author='Stefan Eiermann',
     author_email='python-org@ultraapp.de',
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 2.1',  # replace "X.Y" as appropriate
+        'Framework :: Django :: 2.1',
+        'Topic :: Communications :: Email',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',  # example license
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3.5',
