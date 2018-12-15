@@ -11,4 +11,5 @@ deploy:
   user: $username
   password: $password
   on:
-    branch: master
+    branch:
+      - staging
