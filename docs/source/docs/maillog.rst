@@ -21,5 +21,3 @@ How to log the transmission of an outgoing E-Mail:
 
     with MailLogger(email_message=mail, reference=user) as msg:
         msg.send()
-
-        msg.
