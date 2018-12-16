@@ -11,9 +11,7 @@ For example you can use your own generator to create specific links in a "Passwo
 If you define your own generator you can create your own method which adds a new value to the
 context or updates available context values.
 
-The basic `notification.generator.generic.BasicGenerator` was called by the MailFactory class.
-Die get_context methode in der MailFactory Klasse ruft methoden im generator auf die den selben namen haben wie die Variablen zum MailTemplate oder zur Mail
-
+The MailFactory class calls the method get_context from the basic `notification.generator.generic.BasicGenerator` to fill in the context variables. If there is a content in the class Mail, that content is used. If not, the placeholder content of the class MailTemplate is used.
 
 D.h.
 
