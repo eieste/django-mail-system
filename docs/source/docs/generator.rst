@@ -3,15 +3,15 @@ Generator
 #########
 
 
-You can define a generator by createing a mail.
-This generator can be generated your context for a specific email type.
+You can define a generator by creating a mail.
+This generator can be used to generate context for a specific E-Mail type.
 For example you can use your own generator to create specific links in a "Password Forgotten" Email.
 
 
-If you define your own generator you can create your own method wich add a new value to the
-context, update available context values.
+If you define your own generator you can create your own method which adds a new value to the
+context or updates available context values.
 
-The Generator was called by the MailFactory class.
+The basic `notification.generator.generic.BasicGenerator` was called by the MailFactory class.
 Die get_context methode in der MailFactory Klasse ruft methoden im generator auf die den selben namen haben wie die Variablen zum MailTemplate oder zur Mail
 
 
