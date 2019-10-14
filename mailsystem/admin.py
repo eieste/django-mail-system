@@ -9,10 +9,15 @@ class MailLogLineAdmin(admin.TabularInline):
     readonly_fields = ["type", "payload", "insert", "protocol", "timestamp"]
 
 
+class MailLogRecipientAdmin(admin.TabularInline):
+    model = MailLogRecipient
+    readonly_fields = ["protocol", "recipient_type", "address"]
+
+
 class MailLogSessionAdmin(admin.ModelAdmin):
-    list_display = ("send_at", "uuid", "recipient_email", "sender_email")
-    inlines = [MailLogLineAdmin]
-    readonly_fields = ["send_at", "uuid", "recipient_email", "sender_email", "context", "email"]
+    list_display = ("send_at", "uuid", "sender_email")
+    inlines = [MailLogRecipientAdmin, MailLogLineAdmin]
+    readonly_fields = ["send_at", "uuid", "sender_email", "context", "email"]
 
 
 admin.site.register(MailLogSession, MailLogSessionAdmin)
