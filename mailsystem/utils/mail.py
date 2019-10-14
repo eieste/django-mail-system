@@ -38,11 +38,18 @@ class MailMessage:
 class MailLogger:
 
     def __init__(self, email_message=None, reference=None):
+        """
+            create a detailed E-Mail sendlog
+
+            :param email_message: Django EmailMessage Object to send
+            :param reference: (optional) Reference for this EMailMessage (eg. Customer databases entry) must be a django Model object
+        """
+        # Test if email_message is the django EmailMessage object
         assert isinstance(email_message, EmailMessage)
         self._reference = None
 
         if reference is not None:
-            if isinstance(reference, models.Model):
+            if not isinstance(reference, models.Model):
                 raise ValueError("Reference is not an Model")
             self._reference = reference
 
@@ -55,12 +62,17 @@ class MailLogger:
 
         # Create an UUID for E-Mail Header
         self._email_message.extra_headers["mailsystem-reference-uuid"] = uuid.uuid4()
+
         # Create MailLogSession enry
-        maillog_session = MailLogSession.objects.create(recipient_email=self._email_message.to[0],
-                                                        sender_email=self._email_message.from_email,
+        maillog_session = MailLogSession.objects.create(sender_email=self._email_message.from_email,
                                                         email=self._email_message.body,
                                                         uuid=self._email_message.extra_headers["mailsystem-reference-uuid"]
                                                        )
+
+        maillog_session.add_recipients(self._email_message)
+
+
+
         # Resolve reference o content_type if exists
         if self._reference:
             contenttype = ContentType.objects.get_for_model(model=type(self._reference))

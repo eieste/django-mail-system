@@ -5,6 +5,18 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.timezone import datetime
 from django.utils.translation import gettext as _
+import enum
+
+class RecipientTypeChoices(enum.Enum):
+    TO = "to"
+    CC = "cc"
+    BCC = "bcc"
+
+
+class MailLogRecipient(models.Model):
+    protocol = models.ForeignKey("MailLogSession", on_delete=models.CASCADE)
+    recipient_type = models.CharField(max_length=3, choices=[ (item, item.value) for item in RecipientTypeChoices ])
+    address = models.EmailField()
 
 
 class MailLogSession(models.Model):
@@ -14,11 +26,24 @@ class MailLogSession(models.Model):
     uuid = models.UUIDField(editable=False, help_text=_("E-Mail header Identificator"))
     content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, blank=True, null=True)
     reference = models.CharField(max_length=255, null=True, blank=True)
-    recipient_email = models.EmailField(max_length=255, help_text=_("E-Mail Empfänger"))
+    # recipient_email = models.EmailField(max_length=255, help_text=_("E-Mail Empfänger"))
     sender_email = models.EmailField(max_length=255, help_text=_("E-Mail Sender"))
     context = models.TextField(help_text=_("Context, used for E-Mail rendering"))
     email = models.TextField(help_text=_("Full E-Mail"))
     send_at = models.DateTimeField(auto_now=True, help_text=_("Send Timestamp"))
+
+    def add_recipients(self, email_message):
+        maillog_recipient_list = []
+        for rec_type in [ item.value for item in RecipientTypeChoices ]:
+
+            if hasattr(email_message, rec_type):
+                for recipient_address in getattr(email_message, rec_type):
+                    maillog_recipient_list.append(
+                        MailLogRecipient(protocol=self, recipient_type=rec_type, address=recipient_address)
+                    )
+
+        MailLogRecipient.objects.bulk_create(maillog_recipient_list)
+
 
     def logparse(self, log):
         """
