@@ -7,11 +7,13 @@ from .models import *
 class MailLogLineAdmin(admin.TabularInline):
     model = MailLogLine
     readonly_fields = ["type", "payload", "insert", "protocol", "timestamp"]
+    extra = 0
 
 
 class MailLogRecipientAdmin(admin.TabularInline):
     model = MailLogRecipient
     readonly_fields = ["protocol", "recipient_type", "address"]
+    extra = 0
 
 
 class MailLogSessionAdmin(admin.ModelAdmin):
@@ -44,5 +46,6 @@ class MailVariableAdmin(admin.TabularInline):
 class MailAdmin(admin.ModelAdmin):
     list_display = ("subject", "reason")
     inlines = [MailVariableAdmin]
+
 
 admin.site.register(Mail, MailAdmin)

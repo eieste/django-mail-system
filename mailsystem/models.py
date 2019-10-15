@@ -80,6 +80,16 @@ class MailLogSession(models.Model):
         model = self.content_type.model_class()
         return model.objects.get(pk=self.reference)
 
+    @classmethod
+    def find_by_reference(cls, obj):
+        """
+            finds the corresponding mail log using the reference
+        :param obj: reference that was also specified during creation
+        :return: Queryset with all possible matches
+        """
+        contenttype = ContentType.objects.get_for_model(model=type(obj))
+        return MailLogSession.objects.filter(content_type=contenttype, reference=obj.pk)
+
 
 class MailLogLine(models.Model):
     """
