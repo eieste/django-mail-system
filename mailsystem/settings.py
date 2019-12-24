@@ -114,10 +114,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-EMAIL_HOST = "sslout.df.eu"
-EMAIL_HOST_USER = "support@ultraapp.de"
-EMAIL_HOST_PASSWORD = "qA@e9<o3LtjcfUyLAYb{"
-EMAIL_PORT = 465
+EMAIL_HOST = ""
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
+EMAIL_PORT = 
 EMAIL_USE_SSL = True
 
 """
